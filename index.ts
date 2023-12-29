@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const PORT = 4000;
+const PORT = 80;
 import { PrismaClient } from "@prisma/client";
 import AddUser from "./Functions/AddUser";
 import Authenticate from "./Functions/Authenticate";
