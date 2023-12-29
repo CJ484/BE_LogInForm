@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const { v4: uuid } = require("uuid");
 const app = express();
 const PORT = 4000;
 import { PrismaClient } from "@prisma/client";
