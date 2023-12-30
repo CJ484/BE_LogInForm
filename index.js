@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const LOCALPORT = 5000;
+const PORT = process.env.PORT || 5000;
 const path = require("path");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const AddUser = require("./Functions/AddUser");
@@ -104,6 +104,6 @@ app.post("/locateUser", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || LOCALPORT, (req, res) => {
-  console.log("Server is running @ " + LOCALPORT);
+app.listen(PORT, (req, res) => {
+  console.log("Server is running @ " + PORT);
 });
