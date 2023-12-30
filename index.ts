@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const PORT = 80;
+const LOCALPORT = 4000;
+const path = require('path');
 import { PrismaClient } from "@prisma/client";
 import AddUser from "./Functions/AddUser";
 import Authenticate from "./Functions/Authenticate";
@@ -12,6 +13,11 @@ const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(cors());
+
+app.get("/", function (req: any, res: any) {
+  res.sendFile(path.join(__dirname, "/index.html"));
+});
+
 
 // * Get request to get all users
 // ? Returns all users in database
@@ -111,6 +117,6 @@ app.post("/locateUser", async (req: any, res: any) => {
   }
 });
 
-app.listen(PORT, (req: any, res: any) => {
-  console.log("Server is running @ " + PORT);
+app.listen(process.env.PORT || LOCALPORT, (req: any, res: any) => {
+  console.log("Server is running @ " + LOCALPORT);
 });
