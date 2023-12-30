@@ -9,6 +9,9 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "v20.9.0"
+  },
   "devDependencies": {
     "@types/node": "^20.10.5",
     "nodemon": "^3.0.2",
