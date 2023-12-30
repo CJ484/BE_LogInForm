@@ -1,19 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 const { v4: uuid } = require("uuid");
-
-type User = {
-  firstNameInput: string;
-  lastNameInput: string;
-  emailInput: string;
-  passwordCypherInput: string;
-};
 
 const AddUser = async ({
   firstNameInput,
   lastNameInput,
   emailInput,
   passwordCypherInput,
-}: User) => {
+}) => {
   const prisma = new PrismaClient();
   const userDataCheck = await prisma.user.findMany({
     where: {
@@ -30,8 +23,8 @@ const AddUser = async ({
       firstName: firstNameInput,
       lastName: lastNameInput,
       password: passwordCypherInput,
-    } as any,
+    },
   });
 };
 
-export default AddUser;
+module.exports = AddUser;

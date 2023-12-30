@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 
-const ProfileLocater = async (IdInput: any) => {
+const ProfileLocater = async (IdInput) => {
   const prisma = new PrismaClient();
   console.log(IdInput, "coming from ProfileLocater");
   
@@ -12,4 +12,4 @@ const ProfileLocater = async (IdInput: any) => {
 return userDataCheck;
 };
 
-export default ProfileLocater;
+module.exports = ProfileLocater;

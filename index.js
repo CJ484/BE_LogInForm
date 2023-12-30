@@ -3,25 +3,25 @@ const cors = require("cors");
 const app = express();
 const LOCALPORT = 4000;
 const path = require("path");
-import { PrismaClient } from "@prisma/client";
-import AddUser from "./Functions/AddUser";
-import Authenticate from "./Functions/Authenticate";
-import ProfileLocater from "./Functions/ProfileLocater";
-import { EncryptString } from "./Functions/Hashing";
+const PrismaClient = require("@prisma/client").PrismaClient;
+const AddUser = require("./Functions/AddUser");
+const Authenticate = require("./Functions/Authenticate");
+const ProfileLocater = require("./Functions/ProfileLocater");
+const { EncryptString } = require("./Functions/Hashing");
 
 const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(cors());
 
-app.get("/", function (req: any, res: any) {
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 // * Get request to get all users
 // ? Returns all users in database
 
-app.get("/getData", async (req: any, res: any) => {
+app.get("/getData", async (req, res) => {
   const users = await prisma.user.findMany();
   console.log("I got a connection");
 
@@ -36,14 +36,14 @@ app.get("/getData", async (req: any, res: any) => {
 // ? If user exists, return true
 // ! If user does not exist, return error
 
-app.post("/auth", async (req: any, res: any) => {
+app.post("/auth", async (req, res) => {
   console.log("I got a connection to authentication");
   const findUser = req.body.email;
   const findPassword = req.body.password;
   const data = await Authenticate({
     emailInput: findUser,
     passwordInput: findPassword,
-  }).then((data: any) => {
+  }).then((data) => {
     if (data.results === false) {
       return res
         .status(400)
@@ -60,7 +60,7 @@ app.post("/auth", async (req: any, res: any) => {
 // ? If user does not exist, add user to database
 // ! If user exists, return error
 
-app.post("/addUser", async (req: any, res: any) => {
+app.post("/addUser", async (req, res) => {
   const firstName = req.body.firstNameInput;
   const lastName = req.body.lastNameInput;
   const email = req.body.emailInput.toLowerCase();
@@ -89,7 +89,7 @@ app.post("/addUser", async (req: any, res: any) => {
 // ? If user exists, return user data
 // ! If user does not exist, return error
 
-app.post("/locateUser", async (req: any, res: any) => {
+app.post("/locateUser", async (req, res) => {
   console.log("I got a connection to locate user");
   const requestedId = req.body.id;
   const findUser = await ProfileLocater(requestedId);
@@ -104,6 +104,6 @@ app.post("/locateUser", async (req: any, res: any) => {
   }
 });
 
-app.listen(process.env.PORT || LOCALPORT, (req: any, res: any) => {
+app.listen(process.env.PORT || LOCALPORT, (req, res) => {
   console.log("Server is running @ " + LOCALPORT);
 });
