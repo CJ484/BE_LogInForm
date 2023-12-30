@@ -16,7 +16,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const LOCALPORT = 4000;
-const path = require('path');
+const path = require("path");
 const client_1 = require("@prisma/client");
 const AddUser_1 = __importDefault(require("./Functions/AddUser"));
 const Authenticate_1 = __importDefault(require("./Functions/Authenticate"));
@@ -46,19 +46,16 @@ app.post("/auth", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("I got a connection to authentication");
     const findUser = req.body.email;
     const findPassword = req.body.password;
-    console.log(req.body, "this is coming from auth as the input request");
     const data = yield (0, Authenticate_1.default)({
         emailInput: findUser,
         passwordInput: findPassword,
     }).then((data) => {
-        console.log(data, "this is coming from auth as the output request");
         if (data.results === false) {
             return res
                 .status(400)
                 .json({ error: "User not found", userResults: false });
         }
         else if (data.results === true) {
-            console.log();
             return res.status(200).json({ results: data.id, userResult: true });
         }
     });
@@ -96,7 +93,6 @@ app.post("/addUser", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 app.post("/locateUser", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("I got a connection to locate user");
     const requestedId = req.body.id;
-    console.log(requestedId, "this is coming from locateUser as the input request");
     const findUser = yield (0, ProfileLocater_1.default)(requestedId);
     if (!findUser === true) {
         return res.status(400).json({ error: "User not found", results: false });

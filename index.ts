@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const LOCALPORT = 4000;
-const path = require('path');
+const path = require("path");
 import { PrismaClient } from "@prisma/client";
 import AddUser from "./Functions/AddUser";
 import Authenticate from "./Functions/Authenticate";
@@ -17,7 +17,6 @@ app.use(cors());
 app.get("/", function (req: any, res: any) {
   res.sendFile(path.join(__dirname, "/index.html"));
 });
-
 
 // * Get request to get all users
 // ? Returns all users in database
@@ -39,28 +38,20 @@ app.get("/getData", async (req: any, res: any) => {
 
 app.post("/auth", async (req: any, res: any) => {
   console.log("I got a connection to authentication");
-
   const findUser = req.body.email;
   const findPassword = req.body.password;
-  console.log(req.body, "this is coming from auth as the input request");
-
   const data = await Authenticate({
     emailInput: findUser,
     passwordInput: findPassword,
   }).then((data: any) => {
-    console.log(data, "this is coming from auth as the output request");
-    
     if (data.results === false) {
       return res
         .status(400)
         .json({ error: "User not found", userResults: false });
     } else if (data.results === true) {
-      console.log();
-      
       return res.status(200).json({ results: data.id, userResult: true });
     }
   });
-
   return data;
 });
 
@@ -101,12 +92,8 @@ app.post("/addUser", async (req: any, res: any) => {
 app.post("/locateUser", async (req: any, res: any) => {
   console.log("I got a connection to locate user");
   const requestedId = req.body.id;
-  console.log(
-    requestedId,
-    "this is coming from locateUser as the input request"
-  );
-
   const findUser = await ProfileLocater(requestedId);
+  
   if (!findUser === true) {
     return res.status(400).json({ error: "User not found", results: false });
   } else {
