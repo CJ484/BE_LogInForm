@@ -6,8 +6,7 @@
   "scripts": {
     "build": "node index.js",
     "start": "node index.js",
-    "dev": "nodemon index.ts",
-    "postinstall": "node index.js"
+    "dev": "nodemon index.ts"
   },
   "author": "",
   "license": "ISC",
