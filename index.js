@@ -25,8 +25,13 @@ app.get("/getData", async (req, res) => {
   const users = await prisma.user.findMany();
   console.log("I got a connection");
 
+  const userData = users.map((user) => ({
+    firstName: user.firstName,
+    lastName: user.lastName,
+  }));
+
   res.json({
-    results: users,
+    results: userData,
   });
 });
 
