@@ -8,6 +8,8 @@ const AddUser = require("./Functions/AddUser");
 const Authenticate = require("./Functions/Authenticate");
 const ProfileLocater = require("./Functions/ProfileLocater");
 const { EncryptString } = require("./Functions/Hashing");
+const UpdatePassword = require("./Functions/UpdatePassword");
+const { find } = require("lodash");
 
 const prisma = new PrismaClient();
 
@@ -112,6 +114,21 @@ app.post("/locateUser", async (req, res) => {
       user: { firstName: findUser.firstName, lastName: findUser.lastName },
     });
   }
+});
+
+app.post("/updatePassword", async (req, res) => {
+  console.log("I got a connection to update password");
+  const requestedId = req.body.id;
+  const newPassword = EncryptString(req.body.newPassword);
+  await UpdatePassword(requestedId, newPassword)
+  .then(async () => {
+    const userNewInfo = await ProfileLocater(requestedId);
+    return res.status(200).json({ results: "Profile Updated", user: userNewInfo });
+  })
+  .catch((error) => {
+    console.log(error);
+    return res.status(400).json({ error: "Update failed", results: "Updated Failed" });
+  });
 });
 
 app.listen(PORT, (req, res) => {
