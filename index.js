@@ -48,14 +48,19 @@ app.post("/auth", async (req, res) => {
   const data = await Authenticate({
     emailInput: findUser,
     passwordInput: findPassword,
-  }).then((data) => {
+  })
+  .then((data) => {
     if (data.results === false) {
       return res
-        .status(400)
-        .json({ error: "User not found", userResults: false });
+        .status(401)
+        .json({ error: "Log in Failed", userResults: false });
     } else if (data.results === true) {
       return res.status(200).json({ results: data.id, userResult: true });
     }
+  })
+  .catch((err) => {
+    console.log(err);
+    return res.status(400).json({ error: "Log in Failed", userResults: false });
   });
   return data;
 });
