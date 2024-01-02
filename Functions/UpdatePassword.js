@@ -1,22 +1,23 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client')
 
 const UpdatePassword = async (requestedId, newPasswordCyphered) => {
-    const prisma = new PrismaClient();
-    await prisma.user.update({
-        where: {
-            id: requestedId,
-        },
-        data: {
-            password: newPasswordCyphered,
-        },
-    })
+  const prisma = new PrismaClient()
+  await prisma.user.update({
+    where: {
+      id: requestedId
+    },
+    data: {
+      password: newPasswordCyphered
+    }
+  })
     .then((results) => {
-        console.log(results);
-        return results;
+      console.log(results)
+      return results
     })
     .catch((error) => {
-        throw new Error("Something went wrong");
+      console.log(error)
+      throw new Error('Something went wrong')
     })
-};
+}
 
-module.exports = UpdatePassword;
+module.exports = UpdatePassword

@@ -1,14 +1,14 @@
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 
-function EncryptString(str) {
-    const salt = bcrypt.genSaltSync(4);
-    let result = bcrypt.hashSync(str, salt);
-    return result;
+function EncryptString (str) {
+  const salt = bcrypt.genSaltSync(4)
+  const result = bcrypt.hashSync(str, salt)
+  return result
 }
 
-function CompareString(str, hashedStr) {
-    let result = bcrypt.compareSync(str, hashedStr);
-    return result;
+function CompareString (str, hashedStr) {
+  const result = bcrypt.compareSync(str, hashedStr)
+  return result
 }
 
-module.exports = { EncryptString, CompareString };
+module.exports = { EncryptString, CompareString }

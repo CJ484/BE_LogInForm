@@ -1,20 +1,20 @@
-const { PrismaClient } = require("@prisma/client");
-const { v4: uuid } = require("uuid");
+const { PrismaClient } = require('@prisma/client')
+const { v4: uuid } = require('uuid')
 
 const AddUser = async ({
   firstNameInput,
   lastNameInput,
   emailInput,
-  passwordCypherInput,
+  passwordCypherInput
 }) => {
-  const prisma = new PrismaClient();
+  const prisma = new PrismaClient()
   const userDataCheck = await prisma.user.findMany({
     where: {
-      email: emailInput,
-    },
-  });
+      email: emailInput
+    }
+  })
   if (userDataCheck.length !== 0) {
-    return false;
+    return false
   }
   await prisma.user.create({
     data: {
@@ -22,9 +22,9 @@ const AddUser = async ({
       email: emailInput,
       firstName: firstNameInput,
       lastName: lastNameInput,
-      password: passwordCypherInput,
-    },
-  });
-};
+      password: passwordCypherInput
+    }
+  })
+}
 
-module.exports = AddUser;
+module.exports = AddUser
