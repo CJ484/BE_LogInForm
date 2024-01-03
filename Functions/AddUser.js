@@ -16,6 +16,7 @@ const AddUser = async ({
   if (userDataCheck.length !== 0) {
     return false
   }
+
   await prisma.user.create({
     data: {
       id: uuid(),
