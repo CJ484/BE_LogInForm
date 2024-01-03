@@ -13,13 +13,6 @@ This is considered the Back-End API that handles all requests from the log in fo
 https://log-in-form-444.netlify.app
 
 
-## Screenshots
-
-![App Screenshot](./assets/Images/screenshot_1.png)
-![App Screenshot](./assets/Images/screenshot_2.png)
-![App Screenshot](./assets/Images/screenshot_3.png)
-
-
 ## Badges
 
 ![ExpressJS](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
