@@ -26,6 +26,8 @@ const AddUser = async ({
       password: passwordCypherInput
     }
   })
+
+  return true
 }
 
 module.exports = AddUser

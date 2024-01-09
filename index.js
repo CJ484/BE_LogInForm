@@ -46,6 +46,11 @@ app.post('/auth', async (req, res) => {
   console.log('I got a connection to authentication')
   const findUser = req.body.email
   const findPassword = req.body.password
+
+  if (!findUser || !findPassword) {
+    return res.status(400).json({ results: false, error: 'Missing information' })
+  }
+
   await Authenticate({
     emailInput: findUser,
     passwordInput: findPassword
@@ -68,26 +73,32 @@ app.post('/auth', async (req, res) => {
 // ! If user exists, return error
 
 app.post('/addUser', async (req, res) => {
+  console.log('I got a connection to add user')
   const firstName = req.body.firstNameInput
   const lastName = req.body.lastNameInput
   const email = req.body.emailInput.toLowerCase()
   const password = EncryptString(req.body.passwordCypherInput)
-  console.log('I got a connection to add user')
 
-  if (
-    (await AddUser({
-      firstNameInput: firstName,
-      lastNameInput: lastName,
-      emailInput: email,
-      passwordCypherInput: password
-    })) === false
-  ) {
-    return res
-      .status(400)
-      .json({ error: 'User already exists', results: false })
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ results: false, error: 'Missing information' })
   }
 
-  return res.status(201).json({ results: true, user: 'User has been added' })
+  await AddUser({
+    firstNameInput: firstName,
+    lastNameInput: lastName,
+    emailInput: email,
+    passwordCypherInput: password
+  })
+    .then(data => {
+      if (data === false) {
+        throw new Error('User already exists')
+      } else if (data === true) {
+        return res.status(201).json({ results: true, user: 'User has been added' })
+      }
+    })
+    .catch(err => {
+      res.status(400).json({ results: false, error: err.message })
+    })
 })
 
 // * Post request to locate user
@@ -99,6 +110,11 @@ app.post('/addUser', async (req, res) => {
 app.post('/locateUser', async (req, res) => {
   console.log('I got a connection to locate user')
   const requestedId = req.body.id
+
+  if (!requestedId) {
+    return res.status(400).json({ error: 'Missing information', results: false })
+  }
+
   const findUser = await ProfileLocater(requestedId)
 
   if (!findUser === true) {
@@ -119,21 +135,20 @@ app.post('/locateUser', async (req, res) => {
 
 app.post('/updatePassword', async (req, res) => {
   console.log('I got a connection to update password')
+  if (!req.body.id || !req.body.newPassword) {
+    return res.status(400).json({ error: 'Missing information', results: false })
+  }
+
   const requestedId = req.body.id
   const newPassword = EncryptString(req.body.newPassword)
+
   await UpdatePassword(requestedId, newPassword)
-    .then(async () => {
-      const userNewInfo = await ProfileLocater(requestedId)
-      return res
-        .status(200)
-        .json({ results: 'Profile Updated', user: userNewInfo })
-    })
-    .catch(error => {
-      console.log(error)
-      return res
-        .status(400)
-        .json({ error: 'Update failed', results: 'Updated Failed' })
-    })
+    .then(() => res
+      .status(200)
+      .json({ results: 'Profile Updated' }))
+    .catch(error => res
+      .status(400)
+      .json({ error: error.message, results: 'Updated Failed' }))
 })
 
 app.listen(PORT, (req, res) => {

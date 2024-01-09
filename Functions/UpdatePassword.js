@@ -10,13 +10,8 @@ const UpdatePassword = async (requestedId, newPasswordCyphered) => {
       password: newPasswordCyphered
     }
   })
-    .then(results => {
-      console.log(results)
-      return results
-    })
-    .catch(error => {
-      console.log(error)
-      throw new Error('Something went wrong')
+    .catch(() => {
+      throw new Error('Update failed')
     })
 }
 
