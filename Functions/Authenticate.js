@@ -10,16 +10,13 @@ const Authenticate = async ({ emailInput, passwordInput }) => {
   })
 
   const hashedpassword = userDataCheck?.password
-  const passwordCheck = await CompareString(passwordInput, hashedpassword)
+  const passwordCheck = CompareString(passwordInput, hashedpassword)
 
-  console.log(passwordCheck)
-
-  const data = {
+  const comparison = {
     id: userDataCheck?.id,
     results: passwordCheck
   }
-
-  return data
+  return comparison
 }
 
 module.exports = Authenticate

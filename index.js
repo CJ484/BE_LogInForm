@@ -46,26 +46,20 @@ app.post('/auth', async (req, res) => {
   console.log('I got a connection to authentication')
   const findUser = req.body.email
   const findPassword = req.body.password
-  const data = await Authenticate({
+  await Authenticate({
     emailInput: findUser,
     passwordInput: findPassword
   })
     .then(data => {
       if (data.results === false) {
-        return res
-          .status(401)
-          .json({ error: 'Log in Failed', userResults: false })
-      }
-
-      if (data.results === true) {
+        throw new Error('Log in Failed')
+      } else if (data.results === true) {
         return res.status(200).json({ results: data.id, userResult: true })
       }
     })
     .catch(err => {
-      console.log(err)
-      return res.status(400).json({ error: 'Log in Failed', userResults: false })
+      res.status(401).json({ error: err.message, userResults: false })
     })
-  return data
 })
 
 // * Post request to add user to database
@@ -130,11 +124,15 @@ app.post('/updatePassword', async (req, res) => {
   await UpdatePassword(requestedId, newPassword)
     .then(async () => {
       const userNewInfo = await ProfileLocater(requestedId)
-      return res.status(200).json({ results: 'Profile Updated', user: userNewInfo })
+      return res
+        .status(200)
+        .json({ results: 'Profile Updated', user: userNewInfo })
     })
     .catch(error => {
       console.log(error)
-      return res.status(400).json({ error: 'Update failed', results: 'Updated Failed' })
+      return res
+        .status(400)
+        .json({ error: 'Update failed', results: 'Updated Failed' })
     })
 })
 
