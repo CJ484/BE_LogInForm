@@ -3,7 +3,7 @@ const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3003
 const path = require('path')
-const PrismaClient = require('@prisma/client').PrismaClient
+const { PrismaClient } = require('@prisma/client')
 const AddUser = require('./Functions/AddUser')
 const Authenticate = require('./Functions/Authenticate')
 const ProfileLocater = require('./Functions/ProfileLocater')
@@ -15,7 +15,7 @@ const prisma = new PrismaClient()
 app.use(express.json())
 app.use(cors())
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'))
 })
 
@@ -26,7 +26,7 @@ app.get('/getData', async (req, res) => {
   const users = await prisma.user.findMany()
   console.log('I got a connection')
 
-  const userData = users.map((user) => ({
+  const userData = users.map(user => ({
     firstName: user.firstName,
     lastName: user.lastName
   }))
@@ -50,16 +50,18 @@ app.post('/auth', async (req, res) => {
     emailInput: findUser,
     passwordInput: findPassword
   })
-    .then((data) => {
+    .then(data => {
       if (data.results === false) {
         return res
           .status(401)
           .json({ error: 'Log in Failed', userResults: false })
-      } else if (data.results === true) {
+      }
+
+      if (data.results === true) {
         return res.status(200).json({ results: data.id, userResult: true })
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       return res.status(400).json({ error: 'Log in Failed', userResults: false })
     })
@@ -89,9 +91,9 @@ app.post('/addUser', async (req, res) => {
     return res
       .status(400)
       .json({ error: 'User already exists', results: false })
-  } else {
-    return res.status(201).json({ results: true, user: 'User has been added' })
   }
+
+  return res.status(201).json({ results: true, user: 'User has been added' })
 })
 
 // * Post request to locate user
@@ -107,12 +109,12 @@ app.post('/locateUser', async (req, res) => {
 
   if (!findUser === true) {
     return res.status(400).json({ error: 'User not found', results: false })
-  } else {
-    return res.status(200).json({
-      results: true,
-      user: { firstName: findUser.firstName, lastName: findUser.lastName }
-    })
   }
+
+  return res.status(200).json({
+    results: true,
+    user: { firstName: findUser.firstName, lastName: findUser.lastName }
+  })
 })
 
 // * Post request to update user password
@@ -130,7 +132,7 @@ app.post('/updatePassword', async (req, res) => {
       const userNewInfo = await ProfileLocater(requestedId)
       return res.status(200).json({ results: 'Profile Updated', user: userNewInfo })
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error)
       return res.status(400).json({ error: 'Update failed', results: 'Updated Failed' })
     })
