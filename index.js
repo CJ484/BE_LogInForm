@@ -151,6 +151,35 @@ app.post('/updatePassword', async (req, res) => {
       .json({ error: error.message, results: 'Updated Failed' }))
 })
 
+// * Put request to delete user
+// * Checks if user exists
+// * Using the supplied ID, locate user
+// ? If user exists, delete user
+// ! If user does not exist, return error
+
+app.put('/deleteUser', async (req, res) => {
+  console.log('I got a connection to delete user')
+  const requestedId = req.body.id
+
+  if (!requestedId) {
+    return res.status(400).json({ error: 'Missing information', results: false })
+  }
+
+  const findUser = await ProfileLocater(requestedId)
+
+  if (!findUser === true) {
+    return res.status(400).json({ error: 'User not found', results: false })
+  }
+
+  await prisma.user.delete({
+    where: {
+      id: requestedId
+    }
+  })
+
+  return res.status(200).json({ results: true, user: 'User has been deleted' })
+})
+
 app.listen(PORT, (req, res) => {
   console.log('Server is running @ ' + PORT)
 })
