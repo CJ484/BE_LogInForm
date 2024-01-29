@@ -44,7 +44,7 @@ app.get('/getData', async (req, res) => {
 
 app.post('/auth', async (req, res) => {
   console.log('I got a connection to authentication')
-  const findUser = req.body.email
+  const findUser = req.body.email.toLowerCase()
   const findPassword = req.body.password
 
   if (!findUser || !findPassword) {
